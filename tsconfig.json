@@ -1,11 +1,14 @@
 {
   "compilerOptions": {
+    "outDir": "build/dist",
     "target": "es5",
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "baseUrl": "src",
+    "rootDir": "./",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -20,6 +23,19 @@
     "jsx": "preserve"
   },
   "include": [
-    "src"
+    "src",
+    "server"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "server",
+    "scripts",
+    "config",
+    "jest",
+    "src/setupTests.*",
+    "src/setupProxy.*",
+    "**/*.test.*"
   ]
 }
