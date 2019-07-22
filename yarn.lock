@@ -1483,6 +1483,11 @@
     "@svgr/plugin-svgo" "^4.0.3"
     loader-utils "^1.1.0"
 
+"@tensorflow-models/mobilenet@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@tensorflow-models/mobilenet/-/mobilenet-2.0.2.tgz#3389ff8907c52896e4318348edf982d8245bcd30"
+  integrity sha512-vitIOnLsryGtrb7rPFWNLJhFXPqYtzTODD0nLyqD6cDzLsrxB1KxN8KMNhXOzT5etgb4YW8VWo04YnGkFTEnQA==
+
 "@tensorflow/tfjs-converter@1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@tensorflow/tfjs-converter/-/tfjs-converter-1.2.3.tgz#b56a0833326ac5f150a0a024a260a3911e77eed1"

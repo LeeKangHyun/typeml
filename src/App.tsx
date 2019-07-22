@@ -1,11 +1,13 @@
 import React from 'react'
 
-import CNN from './Module/CNN'
+import ImageClassifier from './Module/ImageClassifier'
 
 class App extends React.Component {
   render() {
     return (
-      <CNN />
+      <>
+        <ImageClassifier />
+      </>
     )
   }
 }

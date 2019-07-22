@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/core": "7.4.3",
     "@svgr/webpack": "4.1.0",
+    "@tensorflow-models/mobilenet": "^2.0.2",
     "@tensorflow/tfjs": "^1.2.3",
     "@tensorflow/tfjs-node": "^1.2.3",
     "@tensorflow/tfjs-vis": "^1.1.0",
