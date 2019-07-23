@@ -1,29 +1,33 @@
+import React from 'react'
 import * as tf from '@tensorflow/tfjs'
 import { IMAGENET_CLASSES } from '../file/imagenet_classes'
 
-export const MOBILENET_MODEL_PATH: string = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json';
+export const MOBILENET_MODEL_PATH: string = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json';
 export const IMAGE_SIZE: number = 224
 export const TOPK_PREDICTIONS: number = 10
 
 let mobilenet: tf.LayersModel
 
-const demoStatusElement: HTMLElement | null = document.getElementById('status');
+let demoStatusElement: HTMLElement
+
 const status = (msg: string) => {
-  if (demoStatusElement) demoStatusElement.innerText = msg;
+  demoStatusElement.innerText = msg;
 }
 
-export const mobilenetDemo = async () => {
-  status('Loading Model...')
+export const mobilenetDemo = async (statusEl: React.RefObject<HTMLDivElement>) => {
+  (demoStatusElement as any) = await statusEl.current
+  
+  status('모델 불러오는 중..')
   
   mobilenet = await tf.loadLayersModel(MOBILENET_MODEL_PATH);
   
   (mobilenet.predict(tf.zeros([1, IMAGE_SIZE, IMAGE_SIZE, 3])) as tf.Tensor).dispose()
   
-  status('')
+  status('모델 불러오기 완료')
 }
 
 export const predict = async (imgElement: HTMLImageElement, predictionsElement: Element | any) => {
-  status('Predicting')
+  status('결과를 불러오는 중 입니다.')
   
   const startTime1 = performance.now()
   
@@ -47,7 +51,7 @@ export const predict = async (imgElement: HTMLImageElement, predictionsElement: 
   const totalTime1 = performance.now() - startTime1
   const totalTime2 = performance.now() - startTime2
   
-  status(`Done in ${Math.floor(totalTime1)} ms (not including preprocess: ${Math.floor(totalTime2)} ms)`)
+  status(`완료시간 ${Math.floor(totalTime1)} ms\n(전처리를 제외한 시간: ${Math.floor(totalTime2)} ms)`)
   
   showResults(imgElement, predictionsElement, classes)
 }
