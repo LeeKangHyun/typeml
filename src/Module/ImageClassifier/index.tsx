@@ -1,40 +1,65 @@
-import * as React from 'react'
-import * as mobilenet from '@tensorflow-models/mobilenet'
+import React, { createRef } from 'react'
 
-class ImageClassifier<P> extends React.Component<P> {
-  net: mobilenet.MobileNet | null
-  el: HTMLImageElement | null
-  
-  constructor(props: P) {
-    super(props)
-    this.net = null
-  }
+import {
+  IMAGE_SIZE,
+  mobilenetDemo,
+  predict
+} from './Task'
+
+import './index.css'
+
+class ImageClassifier extends React.Component {
+  private fileEl = createRef<HTMLInputElement>()
+  private predEl = createRef<HTMLDivElement>()
   
   componentDidMount(): void {
-    this.app().catch(err => console.log(err))
+    mobilenetDemo().then(() => {
+      this.makeImg()
+    })
+    .catch(err => console.log(err))
   }
   
-  app = async () => {
-    try {
-      console.log('Loading...')
-  
-      this.net = await mobilenet.load({
-        version: 1,
-        alpha: 1.0
+  makeImg = () => {
+    if (this.fileEl.current && this.predEl.current) {
+      this.fileEl.current.addEventListener('change', (evt: Event) => {
+        let files: FileList | null = (evt.target as HTMLInputElement).files
+    
+        // @ts-ignore
+        for (let i = 0; i < files.length; i++) {
+          let f: File = (files as FileList)[i]
+          let reader = new FileReader()
+          reader.onload = (e: Event) => {
+            let img: HTMLImageElement = document.createElement('img');
+            // @ts-ignore
+            img.src = e.target.result
+            img.width = IMAGE_SIZE
+            img.height = IMAGE_SIZE
+            img.onload = () => predict(img, this.predEl.current)
+          }
+      
+          reader.readAsDataURL(f)
+        }
       })
-      console.log('Success...')
-  
-      const result = await this.net.classify(this.el as HTMLImageElement)
-      console.log(result)
-    } catch(err) {
-      throw err
     }
   }
   
   render() {
     return (
-      <div>
-        <img ref={el => this.el = el} alt="" id="img" src="./image/JlUvsxa.jpg" />
+      <div className="tfjs-example-container">
+        <section>
+          <p className='section-head'>Status</p>
+          <div id="status" />
+        </section>
+
+        <section>
+          <p className='section-head'>Model Output</p>
+
+          <div id="file-container">
+            Upload an image: <input accept="image/*" type="file" ref={this.fileEl} name="files[]" multiple />
+          </div>
+
+          <div id="predictions" ref={this.predEl}/>
+        </section>
       </div>
     )
   }
