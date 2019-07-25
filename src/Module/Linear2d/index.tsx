@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import * as tfvis from '@tensorflow/tfjs-vis'
 import * as tf from '@tensorflow/tfjs'
 

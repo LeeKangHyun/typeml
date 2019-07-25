@@ -1,21 +1,23 @@
-import React from 'react'
+import * as React from 'react'
 import * as tf from '@tensorflow/tfjs'
-import { IMAGENET_CLASSES } from '../file/imagenet_classes'
+import {
+  IMAGENET_CLASSES
+} from '../file/imagenet_classes'
 
-export const MOBILENET_MODEL_PATH: string = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json';
-export const IMAGE_SIZE: number = 224
-export const TOPK_PREDICTIONS: number = 10
+export const MOBILENET_MODEL_PATH = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_1.0_224/model.json';
+export const IMAGE_SIZE = 224
+export const TOPK_PREDICTIONS = 10
 
 let mobilenet: tf.LayersModel
 
 let demoStatusElement: HTMLElement
 
-const status = (msg: string) => {
-  demoStatusElement.innerText = msg;
-}
+const status = (msg: string) =>  demoStatusElement.innerText = msg
 
-export const mobilenetDemo = async (statusEl: React.RefObject<HTMLDivElement>) => {
-  (demoStatusElement as any) = await statusEl.current
+export const mobilenetDemo = async (
+  statusEl: React.RefObject<HTMLDivElement>
+) => {
+  (demoStatusElement as unknown) = await statusEl.current
   
   status('모델 불러오는 중..')
   
@@ -26,7 +28,10 @@ export const mobilenetDemo = async (statusEl: React.RefObject<HTMLDivElement>) =
   status('모델 불러오기 완료')
 }
 
-export const predict = async (imgElement: HTMLImageElement, predictionsElement: Element | any) => {
+export const predict = async (
+  imgElement: HTMLImageElement,
+  predictionsElement: Element | any
+) => {
   status('결과를 불러오는 중 입니다.')
   
   const startTime1 = performance.now()
@@ -56,10 +61,18 @@ export const predict = async (imgElement: HTMLImageElement, predictionsElement: 
   showResults(imgElement, predictionsElement, classes)
 }
 
-export const getTopKClasses = async (logits: tf.Tensor, topK: number) => {
+type topKClass = {
+  value: number
+  index: number
+}
+
+export const getTopKClasses = async (
+  logits: tf.Tensor,
+  topK: number
+) => {
   const values = await logits.data()
   
-  const valuesAndIndices = []
+  const valuesAndIndices: topKClass[] = []
   for (let i = 0; i < values.length; i++) {
     valuesAndIndices.push({ value: values[i], index: i })
   }
@@ -87,25 +100,34 @@ export const getTopKClasses = async (logits: tf.Tensor, topK: number) => {
   return topClassesAndProbs
 }
 
-export const showResults = (imgElement: HTMLImageElement, predictionsElement: HTMLDivElement, classes: any) => {
-  const predictionContainer: HTMLDivElement = document.createElement('div')
+type Classes = {
+  className: string
+  probability: number
+}
+
+export const showResults = (
+  imgElement: HTMLImageElement,
+  predictionsElement: HTMLDivElement,
+  classes: Classes[]
+) => {
+  const predictionContainer = document.createElement('div')
   predictionContainer.className = 'pred-container'
   
-  const imgContainer: HTMLDivElement = document.createElement('div')
+  const imgContainer = document.createElement('div')
   imgContainer.appendChild(imgElement)
   predictionContainer.appendChild(imgContainer)
   
-  const probsContainer: HTMLDivElement = document.createElement('div')
+  const probsContainer = document.createElement('div')
   for (let i = 0; i < classes.length; i++) {
-    const row: HTMLDivElement = document.createElement('div')
+    const row = document.createElement('div')
     row.className = 'row'
     
-    const classElement: HTMLDivElement = document.createElement('div')
+    const classElement = document.createElement('div')
     classElement.className = 'cell'
     classElement.innerText = classes[i].className
     row.appendChild(classElement)
     
-    const probsElement: HTMLDivElement = document.createElement('div')
+    const probsElement = document.createElement('div')
     probsElement.className = 'cell'
     probsElement.innerText = classes[i].probability.toFixed(3)
     row.appendChild(probsElement)

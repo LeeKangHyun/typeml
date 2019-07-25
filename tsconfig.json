@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "outDir": "build/dist",
+    "rootDir": "./",
+    "baseUrl": "src",
+    "outDir": "dist",
     "module": "esnext",
     "target": "es5",
     "lib": [
@@ -11,8 +13,6 @@
     "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
-    "baseUrl": "src",
-    "rootDir": "./",
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -21,12 +21,17 @@
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "typeRoots": [
+      "./types",
+      "./node_modules/@types"
+    ]
   },
+  "include": [
+    "./src/**/*"
+  ],
   "exclude": [
     "node_modules",
-    "build",
     "dist",
     "server",
     "scripts",

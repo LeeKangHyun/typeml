@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react'
+import * as React from 'react'
+import { useRef, useEffect, useCallback, ChangeEvent } from 'react'
 
 import {
   IMAGE_SIZE,
@@ -9,44 +10,30 @@ import {
 import './index.css'
 
 const ImageClassifier = () => {
-  const predEl = useRef<HTMLDivElement>(null)
-  const fileEl = useRef<HTMLInputElement>(null)
-  const statusEl = useRef<HTMLDivElement>(null);
-  const fileEvt = (evt: Event) => {
-    let files: FileList | null = (evt.target as HTMLInputElement).files
+  const predEl = useRef<HTMLDivElement | null>(null)
+  const fileEl = useRef<HTMLInputElement | null>(null)
+  const statusEl = useRef<HTMLDivElement | null>(null);
+  
+  const fileEvt = useCallback((evt: ChangeEvent<HTMLInputElement>) => {
+    const { files } = evt.target
 
-    // @ts-ignore
-    for (let i = 0; i < files.length; i++) {
-      let f: File = (files as FileList)[i]
+    for (let i = 0; i < (files as FileList).length; i++) {
+      let data = (files as FileList)[i]
       let reader = new FileReader()
-      reader.onload = (e: Event) => {
+      reader.onload = (ev: ProgressEvent) => {
         let img: HTMLImageElement = document.createElement('img');
-        // @ts-ignore
-        img.src = e.target.result
+        img.src = (ev.target as FileReader).result as string
         img.width = IMAGE_SIZE
         img.height = IMAGE_SIZE
         img.onload = () => predict(img, predEl.current)
       }
 
-      reader.readAsDataURL(f)
+      reader.readAsDataURL(data)
     }
-  }
+  }, [])
   
   useEffect(() => {
-    mobilenetDemo(statusEl).then(() => {
-      if (fileEl.current) {
-        fileEl.current.addEventListener('change', fileEvt)
-      }
-    })
-    .catch(err => {
-      console.log(err)
-    })
-    
-    return () => {
-      const { current } = fileEl
-      // @ts-ignore
-      current.removeEventListener('change', fileEvt)
-    }
+    mobilenetDemo(statusEl).catch(err => console.log(err))
   }, [])
   
   return (
@@ -60,7 +47,7 @@ const ImageClassifier = () => {
         <p className='section-head'>모델</p>
 
         <div id="file-container">
-          Upload an image: <input accept="image/*" type="file" ref={fileEl} name="files[]" multiple />
+          Upload an image: <input onChange={fileEvt} accept="image/*" type="file" ref={fileEl} name="files[]" multiple />
         </div>
 
         <div id="predictions" ref={predEl}/>
