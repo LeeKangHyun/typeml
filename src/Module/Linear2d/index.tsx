@@ -118,14 +118,19 @@ class App extends React.Component {
     const epochs = 50
     
     return await model.fit(inputs, labels, {
-      batchSize,
-      epochs,
+      batchSize: batchSize,
+      epochs: epochs,
       shuffle: true,
       callbacks: tfvis.show.fitCallbacks(
-        { name: 'Training Performance' },
+        {
+          name: 'Training Performance'
+        },
         ['loss', 'mse'],
-        { height: 200, callbacks: ['onEpochEnd'] }
-      )
+        {
+          height: 200,
+          callbacks: ['onEpochEnd']
+        }
+      ) as any
     })
   }
   

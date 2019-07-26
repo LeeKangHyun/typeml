@@ -129,7 +129,7 @@ export const showResults = (
     
     const probsElement = document.createElement('div')
     probsElement.className = 'cell'
-    probsElement.innerText = classes[i].probability.toFixed(3)
+    probsElement.innerText = (classes[i].probability * 100).toFixed(3) + '%'
     row.appendChild(probsElement)
     
     probsContainer.appendChild(row)
